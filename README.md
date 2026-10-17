@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# DocBook - Doctor Appointment Booking
+
+A web app where patients can browse doctors, filter by specialty, and book appointments online.
+
+## Features
+
+- Sign up, log in and log out
+- Browse doctors and filter by specialty
+- Search doctors by name or specialty
+- Doctor details page
+- Book an appointment by choosing a date and time slot
+- Already-booked slots are disabled, and double-booking is blocked at the database level
+- My Bookings page with upcoming and past appointments
+- Cancel upcoming appointments
+
+## Tech Stack
+
+- **Frontend:** Next.js 14 (App Router), React, Tailwind CSS
+- **Backend and database:** Supabase (PostgreSQL)
+- **Authentication:** Supabase Auth (email and password)
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone and install
+
+```bash
+git clone
+cd doctor-booking
+npm install
+```
+
+### 2. Set up the database
+
+1. Create a project at [supabase.com](https://supabase.com).
+2. Open the **SQL Editor**, paste the contents of `schema.sql`, and run it. This creates the tables, access rules and sample data.
+3. For local testing, turn off **Confirm email** under Authentication → Sign In / Providers → Email.
+
+### 3. Add environment variables
+
+Create a `.env.local` file in the project root:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=your-project-url
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
+```
+
+Both values are in Supabase under Project Settings → API Keys.
+
+### 4. Run the app
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Database
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+| Table | Purpose |
+|---|---|
+| `categories` | Medical specialties |
+| `doctors` | Doctor profiles, linked to a category |
+| `appointments` | Bookings, linked to a user and a doctor |
 
-## Learn More
+A unique constraint on `(doctor_id, date, time_slot)` prevents two people booking the same slot. Row Level Security ensures users can only see and cancel their own appointments.
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+app/
+  page.js               Home: search, categories, doctor list
+  login/, signup/       Authentication pages
+  doctors/[id]/         Doctor details and booking
+  my-bookings/          User's appointments
+components/             Header and auth form
+lib/supabase.js         Supabase client
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Notes
 
-## Deploy on Vercel
+- Doctor names, bios and photos are dummy data for demonstration.
+- Email confirmation is disabled for easier testing. Enable it for real use.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Screenshots
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+![](screenshots/1.png)
+![](screenshots/2.png)
+![](screenshots/3.png)
+![](screenshots/4.png)
+![](screenshots/5.png)
